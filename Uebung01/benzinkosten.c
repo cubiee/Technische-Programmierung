@@ -1,8 +1,8 @@
 /* benzinkosten.c
 Programm zur berechnung von Benzinkosten bei gegebener Strecke, Kraftstoffpreis und verbrauchtem Benzin
-Autor: Joshua Harig
+Autor: 
 Datum: 22. Nov. 2017
-Kontakt: ms.joshua.harig@htwsaar.de
+Kontakt: 
 Compile: gcc benzinkosten.c -o benzinkosten
 */
 
