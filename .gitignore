@@ -1,2 +1,5 @@
 #PDF Dateien 
 *.pdf
+
+#Object dateien
+*.o
