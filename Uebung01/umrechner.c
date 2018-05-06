@@ -1,8 +1,8 @@
 /* umrechner.c
 Programm zur Umrechnung von Meile zu Kilometer und umgekehrt
-Autor: Joshua Harig
+Autor: 
 Datum: 22. Nov. 2017
-Kontakt: ms.joshua.harig@htwsaar.de
+Kontakt: 
 Compile: gcc umrechner.c -o umrechner
 */
 
