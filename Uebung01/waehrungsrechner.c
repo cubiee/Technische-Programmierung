@@ -1,8 +1,8 @@
 /* waehrungsrechner.c
  Programm zur Berechnung von Dollar in Euro anhand eines eingegebenen Wechselkurses
- Autor: Joshua Harig Mat.Nr.: 3666212
+ Autor: 
  Datum: 20. Nov. 2017
- Kontakt: ms.joshua.harig@htwsaar.de
+ Kontakt: 
  Compile: gcc waehrungsrechner.c -o waehrungsrechner
 */
 
