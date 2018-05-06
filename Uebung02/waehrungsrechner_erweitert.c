@@ -22,11 +22,11 @@ Bsp:
 |                          | 60.00 USD = 48.34 EUR |    1100.00 USD = 886.27 EUR  |
 |                          | 65.00 USD = 52.37 EUR |    1200.00 USD = 966.84 EUR  |
 |                          | 70.00 USD = 56.40 EUR |    1300.00 USD = 1047.41 EUR |
-|            	             | 75.00 USD = 60.43 EUR |    1400.00 USD = 1127.98 EUR |
-|            	             | 80.00 USD = 64.46 EUR |    1500.00 USD = 1208.55 EUR |
+|                          | 75.00 USD = 60.43 EUR |    1400.00 USD = 1127.98 EUR |
+|                          | 80.00 USD = 64.46 EUR |    1500.00 USD = 1208.55 EUR |
 |                          | 85.00 USD = 68.48 EUR |                              |
-|            	             | 90.00 USD = 72.51 EUR |                              |
-|                  	      | 95.00 USD = 76.54 EUR |                              |
+|                          | 90.00 USD = 72.51 EUR |                              |
+|                          | 95.00 USD = 76.54 EUR |                              |
  --------------------------------------------------------------------------------
 */
 
@@ -44,7 +44,7 @@ int main(void){
 	
 	while ((umrechnungskurs <= 0) || (umrechnungskurs > 49)) {
 		flush();
-		printf("Ungültiger Eingabewert Umrechnungskurs bitte erneut eingeben!\n");
+		printf("UngÃ¼ltiger Eingabewert Umrechnungskurs bitte erneut eingeben!\n");
 		printf("Bitte geben Sie den Wechselkurs (USD->EUR) ein: ");
 		scanf("%f", &umrechnungskurs);
 	}
