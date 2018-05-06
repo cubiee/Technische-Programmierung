@@ -1,8 +1,8 @@
 /* mileToKm.c
 Programm zur Umrechnung von Meile zu Kilometer
-Autor: Joshua Harig
+Autor: 
 Datum: 22. Nov. 2017
-Kontakt: ms.joshua.harig@htwsaar.de
+Kontakt: 
 Compile: gcc mileToKm.c -o mileToKm
 */
 
