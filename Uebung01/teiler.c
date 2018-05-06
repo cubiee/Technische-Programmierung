@@ -1,8 +1,8 @@
 /* teiler.c
 Programm zur Überprüfung ob Zahl A glatt durch Zahl B teilbar ist
-Autor: Joshua Harig
+Autor: 
 Datum: 22. Nov. 2017
-Kontakt: ms.joshua.harig@htwsaar.de
+Kontakt: 
 Compile: gcc teiler.c -o teiler
 */
 
