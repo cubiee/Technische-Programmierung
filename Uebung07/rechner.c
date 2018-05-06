@@ -1,8 +1,8 @@
 /*rechner.c
-Programm zumm addieren,subtrahiern,multiplizieren und dividieren von brüchen
+Programm zumm addieren,subtrahiern,multiplizieren und dividieren von brÃ¼chen
 Datum 25.04.2018
-Autor: Joshua Harig
-Mat.Nr.:3666212
+Autor:
+Mat.Nr.:
 compile: gcc -Wall -pedantic -std=c99 -o rechner rechner.c
 */
 
@@ -74,7 +74,7 @@ int main(int argc, char *argv[]){
 
 
 void menue(void){
-	//ausgabe eines hilfepromt für den benutzer
+	//ausgabe eines hilfepromt fÃ¼r den benutzer
 	printf("Aufruf durch:\n     ./rechner zahler1 nenner1 op zaehler2 nenner2\n");
 	printf("op:\n     a = Addition\n     s = Subtraktion\n     m = Multiplikation\n     d = Division\n");
 	return;
