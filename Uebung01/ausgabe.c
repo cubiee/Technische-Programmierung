@@ -1,8 +1,8 @@
 /* ausgabe.c
 Programm zur ausgabe von mehreren zeilen text
-Autor: Joshua Harig
+Autor: 
 Datum: 22. Nov. 2017
-Kontakt: ms.joshua.harig@htwsaar.de
+Kontakt: 
 Compile: gcc ausgabe.c -o ausgabe
 */
 
