@@ -1,8 +1,8 @@
 /* tempRechner.c
  Programm zur Berechnung von Fahrenheit in Celsius und umgekehrt
- Autor: Joshua Harig Mat.Nr.: 3666212
+ Autor: 
  Datum: 20. Nov. 2017
- Kontakt: ms.joshua.harig@htwsaar.de
+ Kontakt: 
  Compile: gcc tempRechner.c -o tempRechner
 */
 
