@@ -1,5 +1,9 @@
-#PDF Dateien 
-*.pdf
-
-#Object dateien
-*.o
+#Whitelist für Technisches Programmieren
+#ignore evrething
+*
+#Whitelist directorys
+!*/
+#Whitelist Files
+!*.c
+!Makefile
+!*.md
