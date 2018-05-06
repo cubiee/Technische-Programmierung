@@ -1,8 +1,8 @@
 /* kmToMile.c
 Programm zur Umrechnung von Kilometer zu Meile
-Autor: Joshua Harig
+Autor: 
 Datum: 22. Nov. 2017
-Kontakt: ms.joshua.harig@htwsaar.de
+Kontakt: 
 Compile: gcc kmToMile.c -o kmToMile
 */
 
