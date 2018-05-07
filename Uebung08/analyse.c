@@ -30,13 +30,13 @@ int main(int argc, char *argv[]){
 	}
 	else{
 		FILE *datei;
-		FILEINFO fileinfo = new_file_info();
+		FILEINFO file_info = new_file_info();
 
-		if (NULL == (datei = open_new_file(argv[1], "r", &fileinfo))){
+		if (NULL == (datei = open_new_file(argv[1], "r", &file_info))){
 			menue();
 		}
 		else{
-			print_file_info(fileinfo);
+			print_file_info(file_info);
 		}
 	}
 	return 0;
