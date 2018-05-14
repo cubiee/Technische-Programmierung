@@ -5,44 +5,84 @@
 #define TRUE 1
 #define FALSE 0
 
-typedef struct main_args_s{
-	char *inputfile_name;
-	char *outputfile_name;
+#define MAX_NAME_SIZE 31
+
+#define DEBUG
+
+typedef struct input_parameter_s{
+	char input_file[MAX_NAME_SIZE ];
+	char output_file[MAX_NAME_SIZE];
 	int key;
-}MAIN_ARGS;
+} INPUT_PARAMETER;
+
+INPUT_PARAMETER new_input_parameter(void);
+
+typedef struct file_information{
+	char filename[MAX_NAME_SIZE];
+	int anzahl_zeichen;
+}FILE_INFORMATION;
+
+FILE_INFORMATION new_file_information(void);
+
 
 void menue(void);
-int load_file(char *filename, char **buffer);
-int write_file(char *filename, char *data);
-int validate_input(char *input[], MAIN_ARGS *parameter);
-char verschluesseln(char character, int n);
+void print_input_args(INPUT_PARAMETER args);
+void print_file_info(FILE_INFORMATION info);
+
+
+int check_input_parameter(char **parameter_list, INPUT_PARAMETER *parameter);
+FILE *load_file(char *filename, FILE_INFORMATION *file_info);
+FILE *create_new_file(char *filename);
+
 
 int main(int argc, char *argv[]){
-    if(argc < 4){
-        menue();
-    }else{
-		char *datei_inhalt;
-		int characters_loaded = 0;
-		MAIN_ARGS input_parameter;
+	if (argc != 4){
+		menue();
+	}
+	else{
+		INPUT_PARAMETER input_parameter = new_input_parameter();
+		FILE_INFORMATION input_file_information = new_file_information();
 
-		if (validate_input(argv, &input_parameter) == FALSE){
-			printf("Key hat ungueltiges format! Bitte nur integer grösser 0 eingeben!\n");
+		FILE *input_file;
+		FILE *output_file;
+
+		if (FALSE == check_input_parameter(argv, &input_parameter)){
+			printf("Wert fuer den schluessel ungueltig (kein integer oder 0)!\n");
 			menue();
 		}
-		else if ((characters_loaded = load_file(input_parameter.inputfile_name, &datei_inhalt)) < 0){
-			printf("Eingabedatei konnte nicht geöffnet werden!\n");
+		else if(NULL == (input_file = load_file(input_parameter.input_file, &input_file_information))){
+			printf("Konnte Eingabedatei nicht oeffnen (nicht vorhanden oder keine zugriffsrechte)!\n");
+			menue();
+		}
+		else if (NULL == (output_file = create_new_file(input_parameter.output_file))){
+			printf("Konnte Ausgabedatei nicht oeffnen (Datei bereits vorhanden oder Fehler aufgetreten)!\n");
 			menue();
 		}
 		else{
-			for (int i = 0; i < characters_loaded; i++){
-				datei_inhalt[i] = verschluesseln(datei_inhalt[i], input_parameter.key);
-			}
-			if ((write_file(input_parameter.outputfile_name, datei_inhalt)) == FALSE){
-				printf("Ausgabedatei konnte nicht geöffnet werden!\n");
-			}
+			printf("alles in ordnung soweit\n");
+			//verschluesseln
 		}
-    }
-    return 0;
+#ifdef DEBUG
+			print_input_args(input_parameter);
+			print_file_info(input_file_information);
+#endif
+	}
+	return 0;
+}
+
+INPUT_PARAMETER new_input_parameter(void){
+	INPUT_PARAMETER new_parameter;
+	memset(new_parameter.input_file, '\0', MAX_NAME_SIZE);
+	memset(new_parameter.output_file, '\0', MAX_NAME_SIZE);
+	new_parameter.key = 0;
+	return new_parameter;
+}
+
+FILE_INFORMATION new_file_information(void){
+	FILE_INFORMATION new_file_information;
+	memset(new_file_information.filename, '\0', MAX_NAME_SIZE);
+	new_file_information.anzahl_zeichen = 0;
+	return new_file_information;
 }
 
 void menue(void){
@@ -50,69 +90,63 @@ void menue(void){
 	printf("\t./geheim <schluessel> <eingabedatei> <ausgabedatei>\n");
 }
 
-int load_file(char *filename, char **buffer){
-	FILE *datei;
-	if (NULL == (datei = fopen(filename, "r"))){
-		return -1;
+void print_input_args(INPUT_PARAMETER args){
+	printf("Input Argumente:\n");
+	printf("Input:          %s\n", args.input_file);
+	printf("Output:         %s\n", args.output_file);
+	printf("key:            %d\n", args.key);
+	return;
+}
+
+void print_file_info(FILE_INFORMATION info){
+	printf("File information:\n");
+	printf("Filename:       %s\n", info.filename);
+	printf("Zeichenanzahl:  %d\n", info.anzahl_zeichen);
+	return;
+}
+
+FILE *load_file(char *filename, FILE_INFORMATION *file_info){
+	FILE *file;
+	if (NULL == (file = fopen(filename, "r"))){
+		return NULL;
 	}
 	else{
-		fseek(datei, 0, SEEK_END);
-		long anzahl_zeichen = ftell(datei);
-		*buffer = malloc((anzahl_zeichen + 1)*sizeof(char));
-		rewind(datei);
-		for (int i = 0; i < anzahl_zeichen; i++){
-			(*buffer)[i] = fgetc(datei);
-		}
-		(*buffer)[anzahl_zeichen] = '\0';
-		fclose(datei);
-		return anzahl_zeichen;
+		strncpy(file_info->filename, filename, MAX_NAME_SIZE);
+		fseek(file, 0, SEEK_END);
+		file_info->anzahl_zeichen = ftell(file);
+		rewind(file);
+		return file;
 	}
 }
 
-int write_file(char *filename, char *data){
+FILE *create_new_file(char *filename){
 	FILE *datei;
-	if (NULL == (datei = fopen(filename, "w"))){
-		return FALSE;
+	if (NULL !=  fopen(filename, "r")){
+		return NULL; // datei bereits vorhanden
 	}
-	else
-	{
-		fputs(data, datei);
-		fclose(datei);
-		return TRUE;
+	else if(NULL == (datei = fopen(filename, "w"))){
+		return NULL; // datei nicht beschreibbar
+	}
+	else{
+		return datei;
 	}
 }
 
-int validate_input(char *input[], MAIN_ARGS *parameter){
+int check_input_parameter(char **parameter_list, INPUT_PARAMETER *parameter){
+	int status = 0;
 	char suchstring[] = {
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		"abcdefghijklmnopqrstuvwxyz"
-		"!\"'$%&'()*+-,./:;<=>?@[\\]^_`{|}~"
+		"!\"'$%&'()*+,./:;<=>?@[\\]^_`{|}~"
 	};
-
-	int status;
-
-	if ((strpbrk(input[1], suchstring) != NULL) || (atoi(input[1]) == 0)){
+	if ((NULL != strpbrk(parameter_list[1], suchstring)) || (0 == atoi(parameter_list[1]))){
 		status = FALSE;
 	}
 	else{
-		parameter->inputfile_name = input[2];
-		parameter->outputfile_name = input[3];
-		parameter->key = atoi(input[1]);
+		strncpy(parameter->input_file, parameter_list[2], MAX_NAME_SIZE);
+		strncpy(parameter->output_file, parameter_list[3], MAX_NAME_SIZE);
+		parameter->key = atoi(parameter_list[1]);
 		status = TRUE;
 	}
 	return status;
-}
-
-char verschluesseln(char character, int key){
-	key = key % 26;
-	if (character >= 'a' && character <= 'z'){
-		return ((character - 'a' + key) % 26) + 'a';
-	}
-	if (character >= 'A' && character <= 'Z'){
-		return ((character - 'A' + key) % 26) + 'A';
-	}
-	else
-	{
-		return character;
-	}
 }
