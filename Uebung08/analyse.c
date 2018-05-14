@@ -8,6 +8,7 @@
 #define LOWERCASE "abcdefghijklmnopqrstuvwxyz"
 #define SPECIAL_CHAR "!\"'$%&'()*+,./:;<=>?@[\\]^_`{|}~0123456789"
 
+//struct zum speichern der dateiniformationen (heufigkeit buchstabensorten)
 typedef struct fileinfo_s{
 	char name[NAMEBUFFER_SIZE];
 	int uppercase;
@@ -16,8 +17,10 @@ typedef struct fileinfo_s{
 	int rows;
 }FILEINFO;
 
+//helferfunktion
 void menue(void);
 
+//arbeiterfunktion
 FILEINFO new_file_info(void);
 FILE *open_new_file(char *filename, char *mode, FILEINFO *fileinfo_buffer);
 void analyse_file(FILE* datei, FILEINFO *fileinfo_buffer);
@@ -47,6 +50,7 @@ void menue(void){
 	printf("\t./analyse <dateiname>\n");
 }
 
+//erstellen eines structs mit defaultwerten
 FILEINFO new_file_info(void){
 	FILEINFO new_fileinfo;
 	new_fileinfo.name[0] = '\0';
@@ -65,6 +69,7 @@ void print_file_info(FILEINFO fileinfo){
 	printf("Sonderzeichen:   %i\n", fileinfo.special_char);
 }
 
+//oeffnet datei und analysiert auf buchstabenvorkommen
 FILE *open_new_file(char *filename, char *mode, FILEINFO *fileinfo_buffer){
 	FILE *datei;
 	if (NULL == (datei = fopen(filename, mode))){
@@ -78,6 +83,7 @@ FILE *open_new_file(char *filename, char *mode, FILEINFO *fileinfo_buffer){
 	}
 }
 
+//analysefunktion zaehlt zeichenweise die buchstabenvorkommen
 void analyse_file(FILE *datei, FILEINFO *fileinfo_buffer){
 	char linebuffer[LINEBUFFER_SIZE] = { '\0' };
 	while (NULL != fgets(linebuffer, LINEBUFFER_SIZE, datei)){
