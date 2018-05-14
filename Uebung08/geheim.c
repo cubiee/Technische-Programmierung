@@ -129,7 +129,8 @@ FILE *load_file(char *filename, FILE_INFORMATION *file_info){
 //erstellt neue Datei zum schreiben ,falls schon vorhanden rueckgabewert = NULL
 FILE *create_new_file(char *filename){
 	FILE *datei;
-	if (NULL !=  fopen(filename, "r")){
+	if (NULL !=  (datei = fopen(filename, "r"))){
+		fclose(datei);
 		return NULL; // datei bereits vorhanden
 	}
 	else if(NULL == (datei = fopen(filename, "w"))){
