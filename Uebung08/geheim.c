@@ -111,7 +111,7 @@ FILE *load_file(char *filename, FILE_INFORMATION *file_info){
 		return NULL;
 	}
 	else{
-		strncpy(file_info->filename, filename, MAX_NAME_SIZE);
+		strncpy(file_info->filename, filename, MAX_NAME_SIZE - 1);
 		fseek(file, 0, SEEK_END);
 		file_info->anzahl_zeichen = ftell(file);
 		rewind(file);
@@ -143,8 +143,8 @@ int check_input_parameter(char **parameter_list, INPUT_PARAMETER *parameter){
 		status = FALSE;
 	}
 	else{
-		strncpy(parameter->input_file, parameter_list[2], MAX_NAME_SIZE);
-		strncpy(parameter->output_file, parameter_list[3], MAX_NAME_SIZE);
+		strncpy(parameter->input_file, parameter_list[2], MAX_NAME_SIZE - 1);
+		strncpy(parameter->output_file, parameter_list[3], MAX_NAME_SIZE - 1);
 		parameter->key = atoi(parameter_list[1]);
 		status = TRUE;
 	}
