@@ -134,6 +134,7 @@ FILE *create_new_file(char *filename){
 
 int check_input_parameter(char **parameter_list, INPUT_PARAMETER *parameter){
 	int status = 0;
+	int key = 0;
 	char suchstring[] = {
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		"abcdefghijklmnopqrstuvwxyz"
@@ -143,9 +144,21 @@ int check_input_parameter(char **parameter_list, INPUT_PARAMETER *parameter){
 		status = FALSE;
 	}
 	else{
+		key = atoi(parameter_list[1]);
 		strncpy(parameter->input_file, parameter_list[2], MAX_NAME_SIZE - 1);
 		strncpy(parameter->output_file, parameter_list[3], MAX_NAME_SIZE - 1);
-		parameter->key = atoi(parameter_list[1]);
+		key = atoi(parameter_list[1]);
+
+		if (key < 0){
+			key = key * (-1);
+			key = key % 26;
+			key = 26 - key;
+			parameter->key = key;
+		}
+		else{
+			key = key % 26;
+			parameter->key = key;
+		}
 		status = TRUE;
 	}
 	return status;
