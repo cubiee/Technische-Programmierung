@@ -4,10 +4,7 @@
 
 #define TRUE 1
 #define FALSE 0
-
 #define MAX_NAME_SIZE 31
-
-#define DEBUG
 
 typedef struct input_parameter_s{
 	char input_file[MAX_NAME_SIZE ];
@@ -33,6 +30,7 @@ void print_file_info(FILE_INFORMATION info);
 int check_input_parameter(char **parameter_list, INPUT_PARAMETER *parameter);
 FILE *load_file(char *filename, FILE_INFORMATION *file_info);
 FILE *create_new_file(char *filename);
+char verschluesseln(char character, int key);
 
 
 int main(int argc, char *argv[]){
@@ -59,13 +57,13 @@ int main(int argc, char *argv[]){
 			menue();
 		}
 		else{
-			printf("alles in ordnung soweit\n");
-			//verschluesseln
+			char buchstabe;
+			for (int i = 0; i < input_file_information.anzahl_zeichen; i++){
+				buchstabe = getc(input_file);
+				buchstabe = verschluesseln(buchstabe, input_parameter.key);
+				putc(buchstabe, output_file);
+			}
 		}
-#ifdef DEBUG
-			print_input_args(input_parameter);
-			print_file_info(input_file_information);
-#endif
 	}
 	return 0;
 }
@@ -162,4 +160,17 @@ int check_input_parameter(char **parameter_list, INPUT_PARAMETER *parameter){
 		status = TRUE;
 	}
 	return status;
+}
+
+char verschluesseln(char character, int key){
+	if (character >= 'a' && character <= 'z'){
+		return ((character - 'a' + key) % 26) + 'a';
+	}
+	if (character >= 'A' && character <= 'Z'){
+		return ((character - 'A' + key) % 26) + 'A';
+	}
+	else
+	{
+		return character;
+	}
 }
