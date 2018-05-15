@@ -3,7 +3,10 @@
 #include <string.h>
 
 #define TEILNEHMERANZAHL 100
-#define BUFFERSIZE 41
+#define BUFFERSIZE 40
+
+#define TRUE 1
+#define FALSE 0
 
 //Struct definition + Konstruktorfunktion
 typedef struct teilnehmer_s{
@@ -16,9 +19,11 @@ TEILNEHMER new_teilnehmer(void);
 
 //Helferfunktionen
 void menue(void);
+void flush(void);
 
 //Arbeiterfunktionen
 TEILNEHMER *generate_dataset(void);
+int einlesen(TEILNEHMER *teilnehmer);
 
 int main(int argc, char *argv[]){
     if(2 != argc){
@@ -26,6 +31,9 @@ int main(int argc, char *argv[]){
     }
     else{
         TEILNEHMER *datensatz = generate_dataset();
+        for(int i = 0; i < 2; i++){
+            einlesen(&(datensatz[i]));
+        }
     }
     return 0;
 }
@@ -53,4 +61,27 @@ TEILNEHMER *generate_dataset(void){
         dataset[i] = new_teilnehmer();
     }
     return dataset;
+}
+
+//teilnehmerdaten einlesen
+int einlesen(TEILNEHMER *teilnehmer){
+    int status;
+    char buffer[10 * BUFFERSIZE];
+    printf("Name: ");
+    gets(buffer);
+    strncpy(teilnehmer->name, strtok(buffer, "\n"), BUFFERSIZE);
+    memset(buffer, '\0', BUFFERSIZE);
+    flush();
+    printf("Firma: ");
+    gets(buffer);
+    strncpy(teilnehmer->firma, strtok(buffer, "\n"), BUFFERSIZE);
+    memset(buffer, '\0', BUFFERSIZE);
+    flush();
+    return TRUE;
+}
+
+//inputbuffer leeren
+void flush(void){
+    char char_buff = 0;
+    while ((char_buff = getchar()) != '\n' && char_buff != EOF) { }
 }
