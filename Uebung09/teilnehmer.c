@@ -1,82 +1,56 @@
-/*teilnehmer.c
-<PROGRAMMBESCHREIBUNG>
-Datum: May  3 2018
-Autor: <NAME> <VORNAME>
-Mat.Nr.: <MATRIKELNUMMER>
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
-#define TRUE 1
-#define FALSE 0
-#define BUFFERSIZE 40
-#define MAXTEILNEHMER 100
+#define TEILNEHMERANZAHL 100
+#define BUFFERSIZE 41
 
+//Struct definition + Konstruktorfunktion
 typedef struct teilnehmer_s{
-	char name[BUFFERSIZE];
-	char firma[BUFFERSIZE];
-	float teilnahmebeitrag;
+    char name[BUFFERSIZE];
+    char firma[BUFFERSIZE];
+    float teilnahmebeitrag;
 } TEILNEHMER;
 
 TEILNEHMER new_teilnehmer(void);
-TEILNEHMER *generate_data_set(int teilnehmeranzahl);
-TEILNEHMER einlesen(void);
 
-int save_data(TEILNEHMER *dataset, int teilnehmeranzahl, char *speicherort);
+//Helferfunktionen
+void menue(void);
 
-int main(void){
-	TEILNEHMER *data = generate_data_set(MAXTEILNEHMER);
+//Arbeiterfunktionen
+TEILNEHMER *generate_dataset(void);
 
-	for(int i = 0; i < 5; i++){
-		data[i] = einlesen();
-	}
-
-	if(save_data(data, MAXTEILNEHMER, "save.dat") == FALSE){
-		printf("Speichern des Datensatz fehlgeschlagen!\n");
-	}
-	return 0;
+int main(int argc, char *argv[]){
+    if(2 != argc){
+        menue();
+    }
+    else{
+        TEILNEHMER *datensatz = generate_dataset();
+    }
+    return 0;
 }
 
+//Struct konstruktor
 TEILNEHMER new_teilnehmer(void){
-	TEILNEHMER new;
-	strcpy(new.name, "");
-	strcpy(new.firma, "");
-	new.teilnahmebeitrag = 0.0f;
-	return new;
+    TEILNEHMER new_teilnehmer;
+    memset(new_teilnehmer.name, '\0', BUFFERSIZE);
+    memset(new_teilnehmer.firma, '\0', BUFFERSIZE);
+    new_teilnehmer.teilnahmebeitrag = 0.0f;
+    return new_teilnehmer;
 }
 
-TEILNEHMER *generate_data_set(int teilnehmeranzahl){
-	TEILNEHMER *dataset = malloc(teilnehmeranzahl * sizeof(TEILNEHMER));
-	for (int i = 0; i < teilnehmeranzahl; i++){
-		dataset[i] = new_teilnehmer();
-	}
-	return dataset;
+//menue ausgeben
+void menue(void){
+    printf("Aufruf durch:\n");
+    printf("\t./teilnehmer <ausgabedatei>\n");
+    return;
 }
 
-TEILNEHMER einlesen(void){
-	TEILNEHMER neuer_teilnehmer = new_teilnehmer();
-	printf("Name: ");
-	fgets(neuer_teilnehmer.name, BUFFERSIZE, stdin);
-	printf("Firma: ");
-	fgets(neuer_teilnehmer.firma, BUFFERSIZE, stdin);
-	return neuer_teilnehmer;
-}
-
-int save_data(TEILNEHMER *dataset, int teilnehmeranzahl, char *speicherort){
-	FILE *save_file;
-	int status = TRUE;
-	if(NULL == (save_file = fopen(speicherort, "w"))){
-		status = FALSE;
-		printf("Speicherdatei konnte nicht geöffnet werden!\n");
-	}
-	else{
-		for(int i = 0; i < teilnehmeranzahl; i++){
-			fprintf(save_file,"Name: %s\tFirma: %s\tBeitrag: %.2f\n",dataset[i].name, dataset[i].firma, dataset[i].teilnahmebeitrag);
-		}
-		fclose(save_file);
-	}
-	return status;
+//datensatz erstellen
+TEILNEHMER *generate_dataset(void){
+    TEILNEHMER *dataset = malloc(TEILNEHMERANZAHL * sizeof(TEILNEHMER));
+    for(int i = 0; i < TEILNEHMERANZAHL; i++){
+        dataset[i] = new_teilnehmer();
+    }
+    return dataset;
 }
