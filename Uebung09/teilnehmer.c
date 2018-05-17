@@ -80,7 +80,7 @@ int einlesen(TEILNEHMER *teilnehmer){
     return TRUE;
 }
 
-//inputbuffer leeren
+//inputbuffer leeren macht probleme
 void flush(void){
     char char_buff = 0;
     while ((char_buff = getchar()) != '\n' && char_buff != EOF) { }
