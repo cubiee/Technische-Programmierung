@@ -3,7 +3,9 @@
 #include <string.h>
 
 #define TEILNEHMERANZAHL 100
-#define BUFFERSIZE 40
+#define BUFFERSIZE 100
+
+#define FORBIDDENCHARS "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "abcdefghijklmnopqrstuvwxyz" "!\"'$%&'()*-+,./:;<=>?@[\\]^_`{|}~"
 
 #define TRUE 1
 #define FALSE 0
@@ -12,7 +14,7 @@
 typedef struct teilnehmer_s{
     char name[BUFFERSIZE];
     char firma[BUFFERSIZE];
-    float teilnahmebeitrag;
+    int teilnahmebeitrag;
 } TEILNEHMER;
 
 TEILNEHMER new_teilnehmer(void);
@@ -23,7 +25,7 @@ void flush(void);
 
 //Arbeiterfunktionen
 TEILNEHMER *generate_dataset(void);
-int einlesen(TEILNEHMER *teilnehmer);
+TEILNEHMER einlesen(void);
 
 int main(int argc, char *argv[]){
     if(2 != argc){
@@ -32,8 +34,13 @@ int main(int argc, char *argv[]){
     else{
         TEILNEHMER *datensatz = generate_dataset();
         for(int i = 0; i < 2; i++){
-            einlesen(&(datensatz[i]));
+            datensatz[i] = einlesen();
         }
+		FILE *datei;
+		datei = fopen("save.dat", "w");
+		for (int i = 0; i < TEILNEHMERANZAHL; i++){
+			fprintf(datei, "Name: %s ; Firma: %s ; Betrag: %d\n", datensatz[i].name, datensatz[i].firma, datensatz[i].teilnahmebeitrag);
+		}
     }
     return 0;
 }
@@ -43,7 +50,7 @@ TEILNEHMER new_teilnehmer(void){
     TEILNEHMER new_teilnehmer;
     memset(new_teilnehmer.name, '\0', BUFFERSIZE);
     memset(new_teilnehmer.firma, '\0', BUFFERSIZE);
-    new_teilnehmer.teilnahmebeitrag = 0.0f;
+    new_teilnehmer.teilnahmebeitrag = 0;
     return new_teilnehmer;
 }
 
@@ -64,24 +71,33 @@ TEILNEHMER *generate_dataset(void){
 }
 
 //teilnehmerdaten einlesen
-int einlesen(TEILNEHMER *teilnehmer){
-    int status;
-    char buffer[10 * BUFFERSIZE];
-    printf("Name: ");
-    gets(buffer);
-    strncpy(teilnehmer->name, strtok(buffer, "\n"), BUFFERSIZE);
-    memset(buffer, '\0', BUFFERSIZE);
-    flush();
-    printf("Firma: ");
-    gets(buffer);
-    strncpy(teilnehmer->firma, strtok(buffer, "\n"), BUFFERSIZE);
-    memset(buffer, '\0', BUFFERSIZE);
-    flush();
-    return TRUE;
+TEILNEHMER einlesen(void){
+	char buffer[BUFFERSIZE];
+	TEILNEHMER teilnehmer = new_teilnehmer();
+	printf("Bitte Name eingeben: ");
+	memset(buffer, '\0', BUFFERSIZE);
+	fgets(buffer, BUFFERSIZE, stdin);
+	strtok(buffer, "\n");
+	strcpy(teilnehmer.name, buffer);
+
+	printf("Bitte Firma eingeben: ");
+	memset(buffer, '\0', BUFFERSIZE);
+	fgets(buffer, BUFFERSIZE, stdin);
+	strtok(buffer, "\n");
+	strcpy(teilnehmer.firma, buffer);
+
+	printf("Bitte Teilnahmebeitrag eingeben: ");
+	memset(buffer, '\0', BUFFERSIZE);
+	fgets(buffer, BUFFERSIZE, stdin);
+	strtok(buffer, "\n");
+	while ((NULL != strpbrk(buffer, FORBIDDENCHARS)) || (0 == atoi(buffer))){
+		printf("Ungueltiger Eingabewert (keine zahl oder zahl <= 0)\n");
+		printf("Bitte Teilnahmebeitrag eingeben: ");
+		memset(buffer, '\0', BUFFERSIZE);
+		fgets(buffer, BUFFERSIZE, stdin);
+		strtok(buffer, "\n");
+	}
+	teilnehmer.teilnahmebeitrag = atoi(buffer);
+	return teilnehmer;
 }
 
-//inputbuffer leeren macht probleme
-void flush(void){
-    char char_buff = 0;
-    while ((char_buff = getchar()) != '\n' && char_buff != EOF) { }
-}
