@@ -21,10 +21,10 @@ TEILNEHMER new_teilnehmer(void);
 
 //Helferfunktionen
 void menue(void);
-void flush(void);
 
 //Arbeiterfunktionen
 TEILNEHMER *generate_dataset(void);
+int speichern(char *dateiname, TEILNEHMER *datensatz, int anzahl);
 TEILNEHMER einlesen(void);
 
 int main(int argc, char *argv[]){
@@ -36,11 +36,7 @@ int main(int argc, char *argv[]){
         for(int i = 0; i < 2; i++){
             datensatz[i] = einlesen();
         }
-		FILE *datei;
-		datei = fopen("save.dat", "w");
-		for (int i = 0; i < TEILNEHMERANZAHL; i++){
-			fprintf(datei, "Name: %s ; Firma: %s ; Betrag: %d\n", datensatz[i].name, datensatz[i].firma, datensatz[i].teilnahmebeitrag);
-		}
+		speichern("save.dat", datensatz, TEILNEHMERANZAHL);
     }
     return 0;
 }
@@ -68,6 +64,23 @@ TEILNEHMER *generate_dataset(void){
         dataset[i] = new_teilnehmer();
     }
     return dataset;
+}
+
+//datensatz speichern
+int speichern(char *dateiname, TEILNEHMER *datensatz, int anzahl){
+	int status;
+	FILE *datei;
+	if (NULL == (datei = fopen(dateiname, "w"))){
+		printf("Speichern Fehlgeschlagen\n");
+		status = FALSE;
+	}
+	else{
+		for (int i = 0; i < anzahl; i++){
+			fprintf(datei, "Name: %s ; Firma: %s ; Betrag: %d\n", datensatz[i].name, datensatz[i].firma, datensatz[i].teilnahmebeitrag);
+		}
+		status = TRUE;
+	}
+	return status;
 }
 
 //teilnehmerdaten einlesen
