@@ -21,6 +21,7 @@ TEILNEHMER new_teilnehmer(void);
 
 //Helferfunktionen
 void menue(void);
+int get_user_int(char *prompt, int min, int max, int *number);
 
 //Arbeiterfunktionen
 TEILNEHMER *generate_dataset(void);
@@ -33,15 +34,24 @@ int main(int argc, char *argv[]){
     }
     else{
         TEILNEHMER *datensatz = generate_dataset();
-        for(int i = 0; i < 2; i++){
-            datensatz[i] = einlesen();
-        }
-		speichern("save.dat", datensatz, TEILNEHMERANZAHL);
+		int stop = 1;
+		int n = 0;
+		while ((stop != 0) && (n < TEILNEHMERANZAHL)){
+			printf("Neuer Teilnehmer:\n");
+			datensatz[n] = einlesen();
+			n++;
+			while (get_user_int("Soll ein weiter teilnehmer eingelesen werden ?(1 = Ja ; 0 = Nein): ", 0, 1, &stop) == FALSE){
+				printf("Ungueltige eingabe!\n");
+			}
+		}
+		speichern(argv[1], datensatz, n);
     }
     return 0;
 }
 
+/*
 //Struct konstruktor
+*/
 TEILNEHMER new_teilnehmer(void){
     TEILNEHMER new_teilnehmer;
     memset(new_teilnehmer.name, '\0', BUFFERSIZE);
@@ -50,14 +60,60 @@ TEILNEHMER new_teilnehmer(void){
     return new_teilnehmer;
 }
 
+/*
 //menue ausgeben
+*/
 void menue(void){
     printf("Aufruf durch:\n");
     printf("\t./teilnehmer <ausgabedatei>\n");
     return;
 }
 
+/*
+integer von benutzer auslesen
+*/
+int get_user_int(char *prompt, int min, int max, int *number){
+	//min und max vertauschen fals min > max
+	if (max < min){
+		int c = max;
+		max = min;
+		min = c;
+	}
+	//puffer und variablen anlegen 
+	int status;
+	char buffer[BUFFERSIZE] = { '\0' };
+	int zahl = 0;
+	char suchstring[] = {
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		"abcdefghijklmnopqrstuvwxyz"
+		"!\"'$%&'()*+,./:;<=>?@[\\]^_`{|}~"
+	};
+	//einlesen und verarbeiten
+	printf(prompt);
+	fgets(buffer, BUFFERSIZE, stdin);
+	strtok(buffer, "\n");
+	if (NULL != strpbrk(buffer, suchstring)){
+		//eingabe keine zahl
+		status = FALSE;
+	}
+	else{
+		zahl = atoi(buffer);
+		if ((zahl < min) || (zahl > max)){
+			//ausserhalb der grenzen
+			status = FALSE;
+		}
+		else{
+			*number = zahl;
+			status = TRUE;
+		}
+	}
+	return status;
+}
+
+
+/*
 //datensatz erstellen
+*/
 TEILNEHMER *generate_dataset(void){
     TEILNEHMER *dataset = malloc(TEILNEHMERANZAHL * sizeof(TEILNEHMER));
     for(int i = 0; i < TEILNEHMERANZAHL; i++){
@@ -66,7 +122,9 @@ TEILNEHMER *generate_dataset(void){
     return dataset;
 }
 
+/*
 //datensatz speichern
+*/
 int speichern(char *dateiname, TEILNEHMER *datensatz, int anzahl){
 	int status;
 	FILE *datei;
@@ -83,7 +141,9 @@ int speichern(char *dateiname, TEILNEHMER *datensatz, int anzahl){
 	return status;
 }
 
+/*
 //teilnehmerdaten einlesen
+*/
 TEILNEHMER einlesen(void){
 	char buffer[BUFFERSIZE];
 	TEILNEHMER teilnehmer = new_teilnehmer();
