@@ -2,10 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TEILNEHMERANZAHL 100
+#define TEILNEHMERANZAHL 3
 #define BUFFERSIZE 100
-
-#define FORBIDDENCHARS "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "abcdefghijklmnopqrstuvwxyz" "!\"'$%&'()*-+,./:;<=>?@[\\]^_`{|}~"
 
 #define TRUE 1
 #define FALSE 0
@@ -25,8 +23,9 @@ int get_user_int(char *prompt, int min, int max, int *number);
 
 //Arbeiterfunktionen
 TEILNEHMER *generate_dataset(void);
-int speichern(char *dateiname, TEILNEHMER *datensatz, int anzahl);
 TEILNEHMER einlesen(void);
+int speichern(char *dateiname, TEILNEHMER *datensatz, int anzahl);
+
 
 int main(int argc, char *argv[]){
     if(2 != argc){
@@ -43,6 +42,9 @@ int main(int argc, char *argv[]){
 			while (get_user_int("Weiter ?(1 = Ja ; 0 = Nein): ", 0, 1, &stop) == FALSE){
 				printf("Ungueltige eingabe!\n");
 			}
+			if (n == TEILNEHMERANZAHL){
+				printf("Maximale teilnehmeranzahl erreicht!\n");
+			}
 		}
 		if (FALSE == speichern(argv[1], datensatz, n)){
 			printf("Speichern fehlgeschlagen!\n");
@@ -53,7 +55,7 @@ int main(int argc, char *argv[]){
 }
 
 /*
-//Struct konstruktor
+Struct mit default werten erstellen
 */
 TEILNEHMER new_teilnehmer(void){
     TEILNEHMER new_teilnehmer;
@@ -89,7 +91,7 @@ int get_user_int(char *prompt, int min, int max, int *number){
 	char suchstring[] = {
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		"abcdefghijklmnopqrstuvwxyz"
-		"!\"'$%&'()*+,./:;<=>?@[\\]^_`{|}~"
+		"!\"'$%&'()*+,./:;<=>?@[\\]^_`{|}~ "
 	};
 	//einlesen und verarbeiten
 	printf(prompt);
@@ -113,9 +115,8 @@ int get_user_int(char *prompt, int min, int max, int *number){
 	return status;
 }
 
-
 /*
-//datensatz erstellen
+datensatz erstellen
 */
 TEILNEHMER *generate_dataset(void){
     TEILNEHMER *dataset = malloc(TEILNEHMERANZAHL * sizeof(TEILNEHMER));
@@ -126,36 +127,7 @@ TEILNEHMER *generate_dataset(void){
 }
 
 /*
-//datensatz speichern
-*/
-int speichern(char *dateiname, TEILNEHMER *datensatz, int anzahl){
-	int status;
-	FILE *datei;
-	if (NULL != (datei = fopen(dateiname, "r"))){
-		//datei bereits vorhanden
-		fclose(datei);
-		//alte datei umbenennen <alter name> + _renamed_
-		char buffer[2 * BUFFERSIZE] = { '\0' };
-		strcat(buffer, dateiname);
-		strcat(buffer, "_renamed_");
-		rename(dateiname, buffer);
-	}
-	//datei neu anlegen
-	if (NULL == (datei = fopen(dateiname, "w"))){
-		status = FALSE;
-	}
-	else{
-		for (int i = 0; i < anzahl; i++){
-			fprintf(datei, "%s - %s - %d EUR\n", datensatz[i].name, datensatz[i].firma, datensatz[i].teilnahmebeitrag);
-		}
-		fclose(datei);
-		status = TRUE;
-	}
-	return status;
-}
-
-/*
-//teilnehmerdaten einlesen
+teilnehmerdaten einlesen
 */
 TEILNEHMER einlesen(void){
 	char buffer[BUFFERSIZE];
@@ -168,16 +140,49 @@ TEILNEHMER einlesen(void){
 	fgets(buffer, BUFFERSIZE, stdin);
 	strtok(buffer, "\n");
 	strcpy(teilnehmer.name, buffer);
+
 	//Firma
 	printf("Bitte Firma eingeben: ");
 	memset(buffer, '\0', BUFFERSIZE);
 	fgets(buffer, BUFFERSIZE, stdin);
 	strtok(buffer, "\n");
 	strcpy(teilnehmer.firma, buffer);
+
 	//Teilnahmebeitrag
-	while (FALSE == get_user_int("Bitte Teilnahmebeitrag eingeben: ", 1, 999999, &beitrag)){
+	while (FALSE == get_user_int("Bitte Teilnahmebeitrag eingeben: ", 1, 99999999, &beitrag)){
 		printf("Ungueltige eingabe!\n");
 	}
 	teilnehmer.teilnahmebeitrag = beitrag;
+
 	return teilnehmer;
+}
+
+/*
+datensatz speichern
+*/
+int speichern(char *dateiname, TEILNEHMER *datensatz, int anzahl){
+	int status;
+	FILE *datei;
+	//pruefen ob datei bereits vorhanden
+	if (NULL != (datei = fopen(dateiname, "r"))){
+		fclose(datei);
+		//alte datei umbenennen <alter name> + _renamed_
+		char buffer[BUFFERSIZE + 9] = { '\0' };
+		strcat(buffer, dateiname);
+		strcat(buffer, "_renamed_");
+		rename(dateiname, buffer);
+	}
+	//datei neu anlegen
+	if (NULL == (datei = fopen(dateiname, "w"))){
+		status = FALSE;
+	}
+	else{
+		for (int i = 0; i < anzahl; i++){
+			fprintf(datei, "%s - %s - %d EUR\n", datensatz[i].name, datensatz[i].firma, datensatz[i].teilnahmebeitrag);
+		}
+		fprintf(datei, "ENDE LISTE\n");
+		fclose(datei);
+		status = TRUE;
+	}
+	return status;
 }
