@@ -40,11 +40,14 @@ int main(int argc, char *argv[]){
 			printf("Neuer Teilnehmer:\n");
 			datensatz[n] = einlesen();
 			n++;
-			while (get_user_int("Soll ein weiter teilnehmer eingelesen werden ?(1 = Ja ; 0 = Nein): ", 0, 1, &stop) == FALSE){
+			while (get_user_int("Weiter ?(1 = Ja ; 0 = Nein): ", 0, 1, &stop) == FALSE){
 				printf("Ungueltige eingabe!\n");
 			}
 		}
-		speichern(argv[1], datensatz, n);
+		if (FALSE == speichern(argv[1], datensatz, n)){
+			printf("Speichern fehlgeschlagen!\n");
+		}
+		free(datensatz);
     }
     return 0;
 }
@@ -126,7 +129,7 @@ TEILNEHMER *generate_dataset(void){
 //datensatz speichern
 */
 int speichern(char *dateiname, TEILNEHMER *datensatz, int anzahl){
-	int status = TRUE;
+	int status;
 	FILE *datei;
 	if (NULL != (datei = fopen(dateiname, "r"))){
 		//datei bereits vorhanden
@@ -135,22 +138,18 @@ int speichern(char *dateiname, TEILNEHMER *datensatz, int anzahl){
 		char buffer[2 * BUFFERSIZE] = { '\0' };
 		strcat(buffer, dateiname);
 		strcat(buffer, "_renamed_");
-		if (rename(dateiname, buffer) != 0){
-			printf("Speichern Fehlgeschlagen\n");
-			printf("Speicherdatei Existiert bereits und konnte nicht umbenannt werden!\n");
-			status = FALSE;
-		}
+		rename(dateiname, buffer);
 	}
 	//datei neu anlegen
 	if (NULL == (datei = fopen(dateiname, "w"))){
-		printf("Speichern Fehlgeschlagen\n");
 		status = FALSE;
 	}
-	if (status == TRUE){
+	else{
 		for (int i = 0; i < anzahl; i++){
-			fprintf(datei, "Name: %s ; Firma: %s ; Betrag: %d\n", datensatz[i].name, datensatz[i].firma, datensatz[i].teilnahmebeitrag);
+			fprintf(datei, "%s - %s - %d EUR\n", datensatz[i].name, datensatz[i].firma, datensatz[i].teilnahmebeitrag);
 		}
 		fclose(datei);
+		status = TRUE;
 	}
 	return status;
 }
@@ -160,31 +159,25 @@ int speichern(char *dateiname, TEILNEHMER *datensatz, int anzahl){
 */
 TEILNEHMER einlesen(void){
 	char buffer[BUFFERSIZE];
+	int beitrag = 0;
 	TEILNEHMER teilnehmer = new_teilnehmer();
+
+	//Name
 	printf("Bitte Name eingeben: ");
 	memset(buffer, '\0', BUFFERSIZE);
 	fgets(buffer, BUFFERSIZE, stdin);
 	strtok(buffer, "\n");
 	strcpy(teilnehmer.name, buffer);
-
+	//Firma
 	printf("Bitte Firma eingeben: ");
 	memset(buffer, '\0', BUFFERSIZE);
 	fgets(buffer, BUFFERSIZE, stdin);
 	strtok(buffer, "\n");
 	strcpy(teilnehmer.firma, buffer);
-
-	printf("Bitte Teilnahmebeitrag eingeben: ");
-	memset(buffer, '\0', BUFFERSIZE);
-	fgets(buffer, BUFFERSIZE, stdin);
-	strtok(buffer, "\n");
-	while ((NULL != strpbrk(buffer, FORBIDDENCHARS)) || (0 == atoi(buffer))){
-		printf("Ungueltiger Eingabewert (keine zahl oder zahl <= 0)\n");
-		printf("Bitte Teilnahmebeitrag eingeben: ");
-		memset(buffer, '\0', BUFFERSIZE);
-		fgets(buffer, BUFFERSIZE, stdin);
-		strtok(buffer, "\n");
+	//Teilnahmebeitrag
+	while (FALSE == get_user_int("Bitte Teilnahmebeitrag eingeben: ", 1, 999999, &beitrag)){
+		printf("Ungueltige eingabe!\n");
 	}
-	teilnehmer.teilnahmebeitrag = atoi(buffer);
+	teilnehmer.teilnahmebeitrag = beitrag;
 	return teilnehmer;
 }
-
