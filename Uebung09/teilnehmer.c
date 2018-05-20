@@ -126,17 +126,31 @@ TEILNEHMER *generate_dataset(void){
 //datensatz speichern
 */
 int speichern(char *dateiname, TEILNEHMER *datensatz, int anzahl){
-	int status;
+	int status = TRUE;
 	FILE *datei;
+	if (NULL != (datei = fopen(dateiname, "r"))){
+		//datei bereits vorhanden
+		fclose(datei);
+		//alte datei umbenennen <alter name> + _renamed_
+		char buffer[2 * BUFFERSIZE] = { '\0' };
+		strcat(buffer, dateiname);
+		strcat(buffer, "_renamed_");
+		if (rename(dateiname, buffer) != 0){
+			printf("Speichern Fehlgeschlagen\n");
+			printf("Speicherdatei Existiert bereits und konnte nicht umbenannt werden!\n");
+			status = FALSE;
+		}
+	}
+	//datei neu anlegen
 	if (NULL == (datei = fopen(dateiname, "w"))){
 		printf("Speichern Fehlgeschlagen\n");
 		status = FALSE;
 	}
-	else{
+	if (status == TRUE){
 		for (int i = 0; i < anzahl; i++){
 			fprintf(datei, "Name: %s ; Firma: %s ; Betrag: %d\n", datensatz[i].name, datensatz[i].firma, datensatz[i].teilnahmebeitrag);
 		}
-		status = TRUE;
+		fclose(datei);
 	}
 	return status;
 }
