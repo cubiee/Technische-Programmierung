@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TEILNEHMERANZAHL 3
+#define TEILNEHMERANZAHL 100
 #define BUFFERSIZE 100
 
 #define TRUE 1
