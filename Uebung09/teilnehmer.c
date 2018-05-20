@@ -26,32 +26,31 @@ TEILNEHMER *generate_dataset(void);
 TEILNEHMER einlesen(void);
 int speichern(char *dateiname, TEILNEHMER *datensatz, int anzahl);
 
-
 int main(int argc, char *argv[]){
-    if(2 != argc){
-        menue();
-    }
-    else{
-        TEILNEHMER *datensatz = generate_dataset();
-	int stop = 1;
-	int n = 0;
-	while ((stop != 0) && (n < TEILNEHMERANZAHL)){
-		printf("Neuer Teilnehmer:\n");
-		datensatz[n] = einlesen();
-		n++;
-		while (get_user_int("Weiter ?(1 = Ja ; 0 = Nein): ", 0, 1, &stop) == FALSE){
-			printf("Ungueltige eingabe!\n");
-		}
-		if (n == TEILNEHMERANZAHL){
-			printf("Maximale teilnehmeranzahl erreicht!\n");
-		}
+	if (2 != argc){
+		menue();
 	}
-	if (FALSE == speichern(argv[1], datensatz, n)){
-		printf("Speichern fehlgeschlagen!\n");
+	else{
+		TEILNEHMER *datensatz = generate_dataset();
+		int stop = 1;
+		int n = 0;
+		while ((stop != 0) && (n < TEILNEHMERANZAHL)){
+			printf("Neuer Teilnehmer:\n");
+			datensatz[n] = einlesen();
+			n++;
+			while (get_user_int("Weiter ?(1 = Ja ; 0 = Nein): ", 0, 1, &stop) == FALSE){
+				printf("Ungueltige eingabe!\n");
+			}
+			if (n == TEILNEHMERANZAHL){
+				printf("Maximale teilnehmeranzahl erreicht!\n");
+			}
+		}
+		if (FALSE == speichern(argv[1], datensatz, n)){
+			printf("Speichern fehlgeschlagen!\n");
+		}
+		free(datensatz);
 	}
-	free(datensatz);
-    }
-    return 0;
+	return 0;
 }
 
 /*
