@@ -33,23 +33,23 @@ int main(int argc, char *argv[]){
     }
     else{
         TEILNEHMER *datensatz = generate_dataset();
-		int stop = 1;
-		int n = 0;
-		while ((stop != 0) && (n < TEILNEHMERANZAHL)){
-			printf("Neuer Teilnehmer:\n");
-			datensatz[n] = einlesen();
-			n++;
-			while (get_user_int("Weiter ?(1 = Ja ; 0 = Nein): ", 0, 1, &stop) == FALSE){
-				printf("Ungueltige eingabe!\n");
-			}
-			if (n == TEILNEHMERANZAHL){
-				printf("Maximale teilnehmeranzahl erreicht!\n");
-			}
+	int stop = 1;
+	int n = 0;
+	while ((stop != 0) && (n < TEILNEHMERANZAHL)){
+		printf("Neuer Teilnehmer:\n");
+		datensatz[n] = einlesen();
+		n++;
+		while (get_user_int("Weiter ?(1 = Ja ; 0 = Nein): ", 0, 1, &stop) == FALSE){
+			printf("Ungueltige eingabe!\n");
 		}
-		if (FALSE == speichern(argv[1], datensatz, n)){
-			printf("Speichern fehlgeschlagen!\n");
+		if (n == TEILNEHMERANZAHL){
+			printf("Maximale teilnehmeranzahl erreicht!\n");
 		}
-		free(datensatz);
+	}
+	if (FALSE == speichern(argv[1], datensatz, n)){
+		printf("Speichern fehlgeschlagen!\n");
+	}
+	free(datensatz);
     }
     return 0;
 }
