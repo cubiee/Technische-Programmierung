@@ -20,6 +20,7 @@ TEILNEHMER new_teilnehmer(void);
 //Helferfunktionen
 void menue(void);
 int get_user_int(char *prompt, int min, int max, int *number);
+int get_user_string(char *prompt, char *string);
 
 //Arbeiterfunktionen
 TEILNEHMER *generate_dataset(void);
@@ -122,18 +123,44 @@ int get_user_int(char *prompt, int min, int max, int *number){
 }
 
 /*
+String von benutzer in puffer einlesen
+*/
+int get_user_string(char *prompt, char *string){
+    char buffer[BUFFERSIZE] = {'\0'};
+    //einlesen
+    printf(prompt);
+    fgets(buffer, BUFFERSIZE, stdin);
+    //verarbeiten
+    strtok(buffer, "\n");
+    char suchstring[] = {
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz"
+        "!\"'$%&'()*+,./:;<=>?@[\\]^_`{|}~"
+    };
+    if (NULL == strpbrk(buffer, suchstring)){
+        //string besteht nur aus lehrzeichen oder ist nicht vorhanden
+        return FALSE;
+    }
+    else{
+        strcpy(string, buffer);
+        return TRUE;
+    }
+}
+
+
+/*
 datensatz erstellen
 */
 TEILNEHMER *generate_dataset(void){
     TEILNEHMER *dataset;
     if(NULL == (dataset = malloc(TEILNEHMERANZAHL * sizeof(TEILNEHMER)))){
-        printf("Speicherbereitstellung fehlgeschlagen!\n");
         return NULL;
+    }else{
+        for(int i = 0; i < TEILNEHMERANZAHL; i++){
+            dataset[i] = new_teilnehmer();
+        }
+        return dataset;
     }
-    for(int i = 0; i < TEILNEHMERANZAHL; i++){
-        dataset[i] = new_teilnehmer();
-    }
-    return dataset;
 }
 
 /*
@@ -145,17 +172,15 @@ TEILNEHMER einlesen(void){
 	TEILNEHMER teilnehmer = new_teilnehmer();
 
 	//Name
-	printf("Bitte Name eingeben: ");
-	memset(buffer, '\0', BUFFERSIZE);
-	fgets(buffer, BUFFERSIZE, stdin);
-	strtok(buffer, "\n");
-	strcpy(teilnehmer.name, buffer);
-
+    while (FALSE == get_user_string("Bitte Name eingeben: ", buffer)){
+        printf("Ungueltige eingabe!\n");
+    }
+    strcpy(teilnehmer.name, buffer);
+    
 	//Firma
-	printf("Bitte Firma eingeben: ");
-	memset(buffer, '\0', BUFFERSIZE);
-	fgets(buffer, BUFFERSIZE, stdin);
-	strtok(buffer, "\n");
+    while (FALSE == get_user_string("Bitte Firma eingeben: ", buffer)){
+        printf("Ungueltige eingabe!\n");
+    }
 	strcpy(teilnehmer.firma, buffer);
 
 	//Teilnahmebeitrag
