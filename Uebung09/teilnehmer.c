@@ -32,23 +32,30 @@ int main(int argc, char *argv[]){
 	}
 	else{
 		TEILNEHMER *datensatz = generate_dataset();
-		int stop = 1;
-		int n = 0;
-		while ((stop != 0) && (n < TEILNEHMERANZAHL)){
-			printf("Neuer Teilnehmer:\n");
-			datensatz[n] = einlesen();
-			n++;
-			while (get_user_int("Weiter ?(1 = Ja ; 0 = Nein): ", 0, 1, &stop) == FALSE){
-				printf("Ungueltige eingabe!\n");
-			}
-			if (n == TEILNEHMERANZAHL){
-				printf("Maximale teilnehmeranzahl erreicht!\n");
-			}
-		}
-		if (FALSE == speichern(argv[1], datensatz, n)){
-			printf("Speichern fehlgeschlagen!\n");
-		}
-		free(datensatz);
+        if(NULL == datensatz){
+            printf("Abbruch!\n");
+            return 0;
+        }
+        else{
+            int stop = 1;
+            int n = 0;
+            while ((stop != 0) && (n < TEILNEHMERANZAHL)){
+                printf("Neuer Teilnehmer:\n");
+                datensatz[n] = einlesen();
+                n++;
+                while (get_user_int("Weiter ?(1 = Ja ; 0 = Nein): ", 0, 1, &stop) == FALSE){
+                    printf("Ungueltige eingabe!\n");
+                }
+                if (n == TEILNEHMERANZAHL){
+                    printf("Maximale teilnehmeranzahl erreicht!\n");
+                }
+            }
+            if (FALSE == speichern(argv[1], datensatz, n)){
+                printf("Speichern fehlgeschlagen!\n");
+            }
+            free(datensatz);
+        }
+		
 	}
 	return 0;
 }
@@ -118,7 +125,11 @@ int get_user_int(char *prompt, int min, int max, int *number){
 datensatz erstellen
 */
 TEILNEHMER *generate_dataset(void){
-    TEILNEHMER *dataset = malloc(TEILNEHMERANZAHL * sizeof(TEILNEHMER));
+    TEILNEHMER *dataset;
+    if(NULL == (dataset = malloc(TEILNEHMERANZAHL * sizeof(TEILNEHMER)))){
+        printf("Speicherbereitstellung fehlgeschlagen!\n");
+        return NULL;
+    }
     for(int i = 0; i < TEILNEHMERANZAHL; i++){
         dataset[i] = new_teilnehmer();
     }
