@@ -73,7 +73,7 @@ TEILNEHMER new_teilnehmer(void){
 }
 
 /*
-//menue ausgeben
+menue ausgeben
 */
 void menue(void){
     printf("Aufruf durch:\n");
@@ -123,7 +123,7 @@ int get_user_int(char *prompt, int min, int max, int *number){
 }
 
 /*
-String von benutzer in puffer einlesen
+String von benutzer einlesen
 */
 int get_user_string(char *prompt, char *string){
     char buffer[BUFFERSIZE] = {'\0'};
