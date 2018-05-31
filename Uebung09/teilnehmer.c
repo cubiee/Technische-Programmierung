@@ -20,6 +20,7 @@ TEILNEHMER new_teilnehmer(void);
 //Helferfunktionen
 void menue(void);
 int get_user_int(char *prompt, int min, int max, int *number);
+int get_user_string(char *prompt, char *string);
 
 //Arbeiterfunktionen
 TEILNEHMER *generate_dataset(void);
@@ -32,23 +33,30 @@ int main(int argc, char *argv[]){
 	}
 	else{
 		TEILNEHMER *datensatz = generate_dataset();
-		int stop = 1;
-		int n = 0;
-		while ((stop != 0) && (n < TEILNEHMERANZAHL)){
-			printf("Neuer Teilnehmer:\n");
-			datensatz[n] = einlesen();
-			n++;
-			while (get_user_int("Weiter ?(1 = Ja ; 0 = Nein): ", 0, 1, &stop) == FALSE){
-				printf("Ungueltige eingabe!\n");
-			}
-			if (n == TEILNEHMERANZAHL){
-				printf("Maximale teilnehmeranzahl erreicht!\n");
-			}
-		}
-		if (FALSE == speichern(argv[1], datensatz, n)){
-			printf("Speichern fehlgeschlagen!\n");
-		}
-		free(datensatz);
+        if(NULL == datensatz){
+            printf("Abbruch!\n");
+            return 0;
+        }
+        else{
+            int stop = 1;
+            int n = 0;
+            while ((stop != 0) && (n < TEILNEHMERANZAHL)){
+                printf("Neuer Teilnehmer:\n");
+                datensatz[n] = einlesen();
+                n++;
+                while (get_user_int("Weiter ?(1 = Ja ; 0 = Nein): ", 0, 1, &stop) == FALSE){
+                    printf("Ungueltige eingabe!\n");
+                }
+                if (n == TEILNEHMERANZAHL){
+                    printf("Maximale teilnehmeranzahl erreicht!\n");
+                }
+            }
+            if (FALSE == speichern(argv[1], datensatz, n)){
+                printf("Speichern fehlgeschlagen!\n");
+            }
+            free(datensatz);
+        }
+		
 	}
 	return 0;
 }
@@ -65,7 +73,7 @@ TEILNEHMER new_teilnehmer(void){
 }
 
 /*
-//menue ausgeben
+menue ausgeben
 */
 void menue(void){
     printf("Aufruf durch:\n");
@@ -115,14 +123,44 @@ int get_user_int(char *prompt, int min, int max, int *number){
 }
 
 /*
+String von benutzer einlesen
+*/
+int get_user_string(char *prompt, char *string){
+    char buffer[BUFFERSIZE] = {'\0'};
+    //einlesen
+    printf(prompt);
+    fgets(buffer, BUFFERSIZE, stdin);
+    //verarbeiten
+    strtok(buffer, "\n");
+    char suchstring[] = {
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        "abcdefghijklmnopqrstuvwxyz"
+        "!\"'$%&'()*+,./:;<=>?@[\\]^_`{|}~"
+    };
+    if (NULL == strpbrk(buffer, suchstring)){
+        //string besteht nur aus lehrzeichen oder ist nicht vorhanden
+        return FALSE;
+    }
+    else{
+        strcpy(string, buffer);
+        return TRUE;
+    }
+}
+
+
+/*
 datensatz erstellen
 */
 TEILNEHMER *generate_dataset(void){
-    TEILNEHMER *dataset = malloc(TEILNEHMERANZAHL * sizeof(TEILNEHMER));
-    for(int i = 0; i < TEILNEHMERANZAHL; i++){
-        dataset[i] = new_teilnehmer();
+    TEILNEHMER *dataset;
+    if(NULL == (dataset = malloc(TEILNEHMERANZAHL * sizeof(TEILNEHMER)))){
+        return NULL;
+    }else{
+        for(int i = 0; i < TEILNEHMERANZAHL; i++){
+            dataset[i] = new_teilnehmer();
+        }
+        return dataset;
     }
-    return dataset;
 }
 
 /*
@@ -134,17 +172,15 @@ TEILNEHMER einlesen(void){
 	TEILNEHMER teilnehmer = new_teilnehmer();
 
 	//Name
-	printf("Bitte Name eingeben: ");
-	memset(buffer, '\0', BUFFERSIZE);
-	fgets(buffer, BUFFERSIZE, stdin);
-	strtok(buffer, "\n");
-	strcpy(teilnehmer.name, buffer);
-
+    while (FALSE == get_user_string("Bitte Name eingeben: ", buffer)){
+        printf("Ungueltige eingabe!\n");
+    }
+    strcpy(teilnehmer.name, buffer);
+    
 	//Firma
-	printf("Bitte Firma eingeben: ");
-	memset(buffer, '\0', BUFFERSIZE);
-	fgets(buffer, BUFFERSIZE, stdin);
-	strtok(buffer, "\n");
+    while (FALSE == get_user_string("Bitte Firma eingeben: ", buffer)){
+        printf("Ungueltige eingabe!\n");
+    }
 	strcpy(teilnehmer.firma, buffer);
 
 	//Teilnahmebeitrag
