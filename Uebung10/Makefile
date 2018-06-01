@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -pedantic -std=c99 -c
 OUTNAME = klimadaten
 
-all: compile clean
+all: compile
 
 compile: main.o klimadatenanalyse.o klimadatenanalyse.h
 	$(CC) -o $(OUTNAME) main.o klimadatenanalyse.o
