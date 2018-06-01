@@ -1,4 +1,4 @@
-#ifdef KLIMADATENANALYSE_H
+#ifndef KLIMADATENANALYSE_H
 #define KLIMADATENANALYSE_H
 
 typedef struct klimadaten_s{
@@ -16,7 +16,7 @@ typedef struct klimadaten_s{
 	float nm;
 	float rr;
 	float pm;
-}KLIMADATEN;
+} KLIMADATEN;
 
 int leseKlimadaten(FILE* datei, KLIMADATEN k[], int anzahl_kopfzeilen, int max_anzahl, int* anzahl);
 
