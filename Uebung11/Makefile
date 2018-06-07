@@ -1,7 +1,9 @@
 CC = gcc
-CFLAGS = -Wall -pedantic -std=c99 -c
-OBJECTS = main.o pythagoras.o quersumme.o teilbar.o wertlesen.o
+LIBDIR = ./include
+CFLAGS = -Wall -pedantic -std=c99 -c -I $(LIBDIR)
+OBJECTS = main.o menue.o pythagoras.o quersumme.o teilbar.o wertlesen.o
 PROJECTNAME = funktionen
+
 
 
 all: compile clean
@@ -11,6 +13,9 @@ compile: $(OBJECTS)
 
 main.o: main.c pythagoras.h quersumme.h teilbar.h wertlesen.h
 	$(CC) $(CFLAGS) main.c
+
+menue.o: menue.c menue.h
+	$(CC) $(CFLAGS) menue.c
 
 pythagoras.o: pythagoras.c pythagoras.h
 	$(CC) $(CFLAGS) pythagoras.c
