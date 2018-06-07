@@ -1,6 +1,6 @@
 #ifndef QUERSUMME_H
 #define QUERSUMME_H
 
-void quersumme(void);
+int quersumme(int zahl);
 
 #endif
