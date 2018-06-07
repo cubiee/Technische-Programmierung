@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <test.h>
+#include "menue.h"
 #include "pythagoras.h"
 #include "quersumme.h"
 #include "teilbar.h"
@@ -25,5 +27,6 @@ int main(void){
         printf("%i / %i = %i \n", ZAHL, TEILER, ZAHL / TEILER);
     }
 
+    printf("Quersumme 12345 %d\n",quersumme(12345));
     return 0;
 }
