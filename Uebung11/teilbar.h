@@ -1,6 +1,6 @@
 #ifndef TEILBAR_H
 #define TEILBAR_H
 
-void teilbar(void);
+int teilbar(int zahl, int teiler);
 
 #endif
