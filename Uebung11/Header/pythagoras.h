@@ -1,6 +1,6 @@
 #ifndef PYTHAGORAS_H
 #define PYTHAGORAS_H
 
-void pythagoras(void);
+void pythagoras(int endwert);
 
 #endif
