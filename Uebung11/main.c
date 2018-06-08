@@ -1,9 +1,9 @@
 #include <stdio.h>
-#include "menue.h"
-#include "pythagoras.h"
-#include "quersumme.h"
-#include "teilbar.h"
-#include "wertlesen.h"
+#include <menue.h>
+#include <pythagoras.h>
+#include <quersumme.h>
+#include <teilbar.h>
+#include <wertlesen.h>
 
 #define ZAHL 10
 #define TEILER 5 
