@@ -1,11 +1,8 @@
 CC = gcc
 LIBDIR = ./Header
-VPATH = $(LIBDIR)
 CFLAGS = -Wall -pedantic -std=c99 -c -I $(LIBDIR)
 OBJECTS = main.o menue.o pythagoras.o quersumme.o teilbar.o wertlesen.o
 PROJECTNAME = funktionen
-
-
 
 all: compile clean
 
