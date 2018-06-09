@@ -1,33 +1,60 @@
 #include <stdio.h>
+
+#include <bool.h>
 #include <menue.h>
 #include <pythagoras.h>
 #include <quersumme.h>
 #include <teilbar.h>
 #include <wertlesen.h>
 
-#define ZAHL 10
-#define TEILER 5 
 
 int main(void){
-    printf("TEST\n");
-    int wert = 0;
+	int auswahl;
+	int zahl;
+	int teiler;
+	BOOL stop = FALSE;
 
-    if(0 == wert_lesen("Bitte Integer eingeben: ", 0, 100, &wert)){
-        printf("fehler kein integer!\n");
-    }
-    else{
-        printf("Nummer: %i\n", wert);
-    }
-
-    if(0 == teilbar( ZAHL, TEILER)){
-        printf("%i ist nicht durch %i teilbar!\n", ZAHL, TEILER);
-    }
-    else{
-        printf("%i / %i = %i \n", ZAHL, TEILER, ZAHL / TEILER);
-    }
-
-	pythagoras(30);
-
-    printf("Quersumme 12345 %d\n",quersumme(12345));
+	while(stop == FALSE){
+		auswahl = menue();
+		switch (auswahl){
+		case CMD_QUER:
+			//quersumme
+			while (!wert_lesen("Von welcher Zahl soll die quersumme gebildet werden? ", 0, 2147483647, &zahl)){
+				printf("Ungueltige eingabe!\nBitte erneut eingeben: ");
+			}
+			printf("Die Quersumme von %i ist %i\n",zahl, quersumme(zahl));
+			printf("\n");
+			break;
+		case CMD_PYTH:
+			//pythagoras
+			while (!wert_lesen("Bis zu welcher zahl sollen die tripel ausgegeben werden? ", 0, 100000, &zahl)){
+				printf("Ungueltige eingabe!\nBitte erneut eingeben: ");
+			}
+			pythagoras(zahl);
+			printf("\n");
+			break;
+		case CMD_TBAR:
+			//teilbar
+			while (!wert_lesen("Bitte Zahl eingeben: ", 0, 10000, &zahl)){
+				printf("Ungueltige eingabe!\nBitte erneut eingeben: ");
+			}
+			while (!wert_lesen("Bitte Teiler eingeben: ", 0, 10000, &teiler)){
+				printf("Ungueltige eingabe!\nBitte erneut eingeben: ");
+			}
+			if (teilbar(zahl, teiler)){
+				printf("%i / %i = %i\n", zahl, teiler, zahl / teiler);
+			}
+			else{
+				printf("Nicht teilbar\n");
+			}
+			printf("\n");
+			break;
+		case CMD_ENDE:
+			//ende
+			printf("Ende\n");
+			stop = TRUE;
+			break;
+		}
+	}
     return 0;
 }
