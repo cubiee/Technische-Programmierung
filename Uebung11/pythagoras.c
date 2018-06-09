@@ -1,26 +1,29 @@
 #include <stdio.h>
-#include "pythagoras.h"
+#include <bool.h>
+#include <pythagoras.h>
 
 // m und n (m, n element N und m > n)
 void pythagoras(int endwert){
-	int max = 0;
-	int m = 0;
-	int n = 0;
+	BOOL stop = FALSE;
+	int m = 2, n = 1;
 	int a, b, c;
-
-	while ((2 * max * max - 2 * max + 1) <= endwert){
-		max++;
-	}
-
-	for (m = 2; m <= max; m++){
-		for (n = 1; n < m; n++){
-			a = (m*m) - (n*n);
-			b = 2 * m*n;
-			c = m*m + n*n;
+	while (!stop){
+		while (!stop && (n < m)){
 			if ((m + n) % 2){
-				printf("%4i^2 + %4i^2 = %4i^2\n", a, b, c);
+				if ((m*m + n*n) <= endwert){
+					a = (m*m) - (n*n);
+					b = 2 * m * n;
+					c = m*m + n*n;
+					printf("%4i^2 + %4i^2 = %4i^2\n", a, b, c);
+				}
+				else{
+					stop = TRUE;
+				}
 			}
+			n++;
 		}
+		n = 1;
+		m++;
 	}
     return;
 }
