@@ -3,4 +3,6 @@
 
 void pythagoras(int endwert);
 
+void pythagoras_bruteforce(int endwert);
+
 #endif

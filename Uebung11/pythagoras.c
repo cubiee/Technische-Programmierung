@@ -27,3 +27,15 @@ void pythagoras(int endwert){
 	}
     return;
 }
+
+void pythagoras_bruteforce(int endwert){
+	for (int a = 1; a <= endwert; a++){
+		for (int b = 1; b <= endwert; b++){
+			for (int c = 1; c <= endwert; c++){
+				if (a*a + b*b == c*c){
+					printf("%4i^2 + %4i^2 = %4i^2\n", a, b, c);
+				}
+			}
+		}
+	}
+}
