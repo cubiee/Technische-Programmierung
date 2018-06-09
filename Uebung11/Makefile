@@ -12,7 +12,7 @@ all: compile clean
 compile: $(OBJECTS)
 	$(CC) $(OBJECTS) -o $(PROJECTNAME)
 
-main.o: main.c pythagoras.h quersumme.h teilbar.h wertlesen.h
+main.o: main.c bool.h menue.h pythagoras.h quersumme.h teilbar.h wertlesen.h 
 	$(CC) $(CFLAGS) main.c
 
 menue.o: menue.c menue.h
