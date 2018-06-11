@@ -1,44 +1,59 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include "klimadatenanalyse.h"
-#include "parsing_data.h"
+
+#include <bool.h>
+#include <klima_defines.h>
+#include <klimadatenanalyse.h>
+#include <menue.h>
+#include <daten_verarbeiten.h>
 
 
-
-int main(int argv , char *argc[]){
-	if (argv == 2){
-		int fehlercode = check_input_parameter(argc[1]);
-		printf("Fehlercode: %d\n", fehlercode);
-		
-		int i = 0;
-		KLIMADATEN klimadaten[ARRAYSIZE];
-		for (i = 0; i < ARRAYSIZE; i++){
-			klimadaten[i] = new_klimadaten();
-		}
-		TEMPERATUR temperatur[ARRAYSIZE];
-		for (i = 0; i < ARRAYSIZE; i++){
-			temperatur[i] = new_temperatur();
-		}
-
-		FILE *file;
-		file = fopen("testdatei.txt", "r");
-		FILEINFORMATION info;
-		check_data_file(file, &info);
-		printf("Kopfzeilen: %d\n Datensaetze: %d\n", info.kopfzeilen, info.anzahl_datensaetze);
-
-
-		int nmbr = 0;
-		int *anzahl;
-		anzahl = &nmbr;
-		if (0 == lese_Klimadaten(file, klimadaten, 5, 200, anzahl)){
-			printf("2   %d   \n", *anzahl);
-			mache_temperatur(klimadaten, temperatur, 200);
-			ausgabe_temperaturen(temperatur, 200);
-		}
-		printf("Maximum\n");
-		TEMPERATUR maximum = findeMaxTemperatur(temperatur, 200);
-		ausgabe_temperatur(maximum);
+int main(int argc, char *argv[]){
+	if (argc != 2){
+		printf("Falsche Anzahl Parameter beim aufruf von ./klimadatenanalyse!\n");
+		menue();
 	}
-	return EXIT_SUCCESS;
+	else{
+		if (!check_input_parameter(argv[1])){
+			printf("Ungueltiger dateiname!\n");
+			menue();
+		}
+		else{
+			FILE *datafile;
+			if (NULL == (datafile = fopen(argv[1], "r"))){
+				printf("Oeffnen des Datensatz nicht moeglich!\n");
+				menue();
+			}
+			else{
+				FILEINFORMATION info = new_fileinformation();
+				if (!check_data_file(datafile, &info)){
+					printf("Formatfehler!\n");
+					menue();
+				}
+				else{
+					printf("Kopfzeilen  : %i\n", info.kopfzeilen);
+					printf("Datensaetze : %i\n", info.anzahl_datensaetze);
+					KLIMADATEN *rohdaten = malloc(info.anzahl_datensaetze * sizeof(KLIMADATEN));
+					TEMPERATUR *temperaturdaten = malloc(info.anzahl_datensaetze * sizeof(TEMPERATUR));
+					if (NULL == rohdaten || NULL == temperaturdaten){
+						printf("Speicherbereitstellung fehlgeschlagen\n");
+					}
+					else{
+						int i = 0;
+						for (i = 0; i < info.anzahl_datensaetze; i++){
+							rohdaten[i] = new_klimadaten();
+							temperaturdaten[i] = new_temperatur();
+						}
+						if (lese_Klimadaten(datafile, rohdaten, info.kopfzeilen, info.anzahl_datensaetze, &i)){
+							mache_temperatur(rohdaten, temperaturdaten, info.anzahl_datensaetze);
+							ausgabe_temperaturen(temperaturdaten, info.anzahl_datensaetze);
+							printf("Maximaltemperatur:\n");
+							ausgabe_temperatur(findeMaxTemperatur(temperaturdaten, info.anzahl_datensaetze));
+						}
+					}
+				}
+			}
+		}
+	}
+	return 0;
 }
