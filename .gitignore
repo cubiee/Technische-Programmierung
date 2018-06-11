@@ -1,10 +1,14 @@
-#Whitelist für Technisches Programmieren
+#Whitelist fÃ¼r Technisches Programmieren
 #ignore evrething
 *
 #Whitelist directorys
 !*/
 #Whitelist Files
+#c 
 !*.c
 !*.h
 !Makefile
+
+#other
 !*.md
+!*.txt
