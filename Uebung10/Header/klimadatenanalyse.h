@@ -3,7 +3,7 @@
 
 //Vorgegebene Funktionen
 /*
-Funktion zum einlesen der klimadaten aus einer datei
+Funktion zum auslesen der Klimadaten aus angegebener datei
 */
 int lese_Klimadaten(FILE* datei, KLIMADATEN *k, int anzahl_kopfzeilen, int max_anzahl, int* anzahl);
 
@@ -11,6 +11,11 @@ int lese_Klimadaten(FILE* datei, KLIMADATEN *k, int anzahl_kopfzeilen, int max_a
 Funktion zum verarbeiten der eingelesenen klimadaten
 */
 void mache_temperatur(KLIMADATEN k[], TEMPERATUR t[], int anzahl);
+
+/*
+Funktion zum ausgeben einzelner temperaturwerte
+*/
+void ausgabe_temperatur(TEMPERATUR t);
 
 /*
 Funktion zum ausgeben der verabeiteten temperaturdaten
@@ -21,10 +26,5 @@ void ausgabe_temperaturen(TEMPERATUR t[], int anzahl);
 Funktion zum finden des temperatur maximums
 */
 TEMPERATUR findeMaxTemperatur(TEMPERATUR t[], int anzahl);
-
-/*
-Funktion zum ausgeben einzelner temperaturwerte
-*/
-void ausgabe_temperatur(TEMPERATUR t);
 
 #endif

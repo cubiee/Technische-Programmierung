@@ -33,6 +33,7 @@ int main(int argc, char *argv[]){
 				else{
 					printf("Kopfzeilen  : %i\n", info.kopfzeilen);
 					printf("Datensaetze : %i\n", info.anzahl_datensaetze);
+					//speicher für datensatze reservieren
 					KLIMADATEN *rohdaten = malloc(info.anzahl_datensaetze * sizeof(KLIMADATEN));
 					TEMPERATUR *temperaturdaten = malloc(info.anzahl_datensaetze * sizeof(TEMPERATUR));
 					if (NULL == rohdaten || NULL == temperaturdaten){
@@ -40,15 +41,21 @@ int main(int argc, char *argv[]){
 					}
 					else{
 						int i = 0;
+						//auf default werte setzen
 						for (i = 0; i < info.anzahl_datensaetze; i++){
 							rohdaten[i] = new_klimadaten();
 							temperaturdaten[i] = new_temperatur();
 						}
+						//einlesen
 						if (lese_Klimadaten(datafile, rohdaten, info.kopfzeilen, info.anzahl_datensaetze, &i)){
+							//verarbeiten
 							mache_temperatur(rohdaten, temperaturdaten, info.anzahl_datensaetze);
+							//ausgeben
 							ausgabe_temperaturen(temperaturdaten, info.anzahl_datensaetze);
 							printf("Maximaltemperatur:\n");
 							ausgabe_temperatur(findeMaxTemperatur(temperaturdaten, info.anzahl_datensaetze));
+							free(rohdaten);
+							free(temperaturdaten);
 						}
 					}
 				}

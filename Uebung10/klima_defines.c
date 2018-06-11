@@ -1,6 +1,9 @@
 #include <string.h>
 #include <klima_defines.h>
 
+/*
+Funktion zum festlegen der standartwerte neuer KLIMADATEN 
+*/
 KLIMADATEN new_klimadaten(void){
 	KLIMADATEN new_klima;
 	new_klima.stat = 0;
@@ -20,6 +23,9 @@ KLIMADATEN new_klimadaten(void){
 	return new_klima;
 }
 
+/*
+Funktion zum 0 setzten der werte ab einschliesslich tg bei formatfehler
+*/
 void setze_werte_0(KLIMADATEN *k){
 	k->tg = 0.0;
 	k->tn = 0.0;
@@ -35,6 +41,9 @@ void setze_werte_0(KLIMADATEN *k){
 	return;
 }
 
+/*
+Funktion zum festlegen der standartwerte eines DATUM Struct
+*/
 DATUM new_datum(void){
 	DATUM new_dat;
 	new_dat.jahr = 0;
@@ -43,7 +52,9 @@ DATUM new_datum(void){
 	return new_dat;
 }
 
-
+/*
+Funktion zum festlegen der standartwerte neuer TEMPERATUREN
+*/
 TEMPERATUR new_temperatur(void){
 	TEMPERATUR new_temp;
 	new_temp.stat = 0;
@@ -55,6 +66,9 @@ TEMPERATUR new_temperatur(void){
 	return new_temp;
 }
 
+/*
+Funktion zum festlegen der standartwerte neuer FILEINFORMATION
+*/
 FILEINFORMATION new_fileinformation(void){
 	FILEINFORMATION new_info;
 	new_info.kopfzeilen = 0;

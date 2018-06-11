@@ -8,7 +8,7 @@
 
 
 /*
-Struktur zum speichern der eingelesenen daten aus der klimadatendatei
+Struktur zum speichern der eingelesenen daten aus der klimadatendatei + konstruktorfunktion + setzte 0 funktion
 */
 typedef struct klimadaten_s{
 	int stat;
@@ -32,7 +32,7 @@ KLIMADATEN new_klimadaten(void);
 void setze_werte_0(KLIMADATEN *k);
 
 /*
-Struktur zum speichern des datums in temperatur
+Struktur zum speichern des datums in temperatur + konstruktorfunktion
 */
 typedef struct datum_s{
 	int jahr;
@@ -43,7 +43,7 @@ typedef struct datum_s{
 DATUM new_datum(void);
 
 /*
-Struktur zum speichern der verarbeiteten daten
+Struktur zum speichern der verarbeiteten daten + konstruktorfunktion
 */
 typedef struct temperatur_s{
 	int stat;
@@ -57,7 +57,7 @@ typedef struct temperatur_s{
 TEMPERATUR new_temperatur(void);
 
 /*
-Structur zum speichern von Datei Informationen
+Structur zum speichern von Datei Informationen + konstruktorfunktion
 */
 typedef struct fileinformation_s{
 	int kopfzeilen;

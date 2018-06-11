@@ -6,15 +6,19 @@
 #include <klimadatenanalyse.h>
 #include <daten_verarbeiten.h>
 
+/*
+Funktion zum auslesen der Klimadaten aus angegebener datei
+*/
 int lese_Klimadaten(FILE* datei, KLIMADATEN *k, int anzahl_kopfzeilen, int max_anzahl, int *anzahl){
-	//hier sollen die klimadaten eingelesen werden
 	BOOL status = TRUE;
 	char buffer[BUFFERSIZE] = { '\0' };
 	KLIMADATEN puffer = new_klimadaten();
 
 	int i = 0;
+	//kopfzeilen ueberspringen
 	for (i = 0; i < anzahl_kopfzeilen; i++){
 		if (NULL == fgets(buffer, BUFFERSIZE, datei)){
+			//fehler beim einlesen der kopfzeilen
 			printf("NULLK\n");
 		}
 	}
@@ -22,15 +26,17 @@ int lese_Klimadaten(FILE* datei, KLIMADATEN *k, int anzahl_kopfzeilen, int max_a
 	i = 0;
 	int stop = 0;
 	int pruefe = 0;
-
+	//daten einlesen
 	while ((i < max_anzahl) && (stop == 0)){
 		memset(buffer, '\0', BUFFERSIZE);
 		if (NULL == fgets(buffer, BUFFERSIZE, datei)){
+			//fehler beim einlesen der daten
 			printf("NULLD\n");
 		}
 		
 		pruefe = 0;
 		pruefe = parse_raw_data(buffer, &puffer);
+		//pruefen ob formatfehler vorliegen
 		if (pruefe < 14){
 			if (pruefe < 3){
 				//schwerwiegender fehler
@@ -44,6 +50,7 @@ int lese_Klimadaten(FILE* datei, KLIMADATEN *k, int anzahl_kopfzeilen, int max_a
 				setze_werte_0(&puffer);
 			}
 		}
+		//speichern in k
 		if (stop == 0){
 			k[i] = puffer;
 			i++;
@@ -52,8 +59,10 @@ int lese_Klimadaten(FILE* datei, KLIMADATEN *k, int anzahl_kopfzeilen, int max_a
 	return status;
 }
 
+/*
+Funktion zum verarbeiten der eingelesenen klimadaten
+*/
 void mache_temperatur(KLIMADATEN k[], TEMPERATUR t[], int anzahl){
-	//hier werden die klimadaten ausgewertet und in einem struct gespeichert
 	for (int i = 0; i < anzahl; i++){
 		jjjjmmdd_to_date(k[i].jjjjmmdd, &(t[i].datum));
 		t[i].stat = k[i].stat;
@@ -65,20 +74,27 @@ void mache_temperatur(KLIMADATEN k[], TEMPERATUR t[], int anzahl){
 	return;
 }
 
+/*
+Funktion zum ausgeben einzelner temperaturwerte
+*/
 void ausgabe_temperatur(TEMPERATUR t){
-	//hier wird eine temperatur ausgegeben
 	printf("Temperaturen am %2i. %-9s %4i: TG %7.2lf / TN %7.2lf / TM %7.2lf / TX %7.2lf\n", t.datum.tag, t.datum.monat, t.datum.jahr, t.tg, t.tn, t.tm, t.tx);
 	return;
 }
 
+/*
+Funktion zum ausgeben der verabeiteten temperaturdaten
+*/
 void ausgabe_temperaturen(TEMPERATUR t[], int anzahl){
-	//hier werden die temperaturen ausgegeben;
 	for (int i = 0; i < anzahl; i++){
 		printf("Temperaturen am %2i. %-9s %4i: TG %7.2lf / TN %7.2lf / TM %7.2lf / TX %7.2lf\n", t[i].datum.tag, t[i].datum.monat, t[i].datum.jahr, t[i].tg, t[i].tn, t[i].tm, t[i].tx);
 	}
 	return;
 }
 
+/*
+Funktion zum finden des temperatur maximums
+*/
 TEMPERATUR findeMaxTemperatur(TEMPERATUR t[], int anzahl){
 	TEMPERATUR maximum = new_temperatur();
 	maximum = t[0];
