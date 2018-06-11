@@ -1,7 +1,6 @@
 #ifndef KLIMA_DEFINES_H
 #define KLIMA_DEFINES_H
 
-#define MAX_NAMESIZE 11
 #define MAX_KOPF_ZEILE 10
 #define MAX_DATA_SETS 1000
 
