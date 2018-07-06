@@ -24,8 +24,6 @@ void setGreenLedAsOutput(struct BCM2837 *gpio) {
 	*(gpio->virtualAdd + 1) |= (1 << 24);
 }
 
-
-
 //Set on or off
 void setOnLED(struct BCM2837 *gpio, int led) {
 	unsigned int bitmask = 1U << (led % 32);
