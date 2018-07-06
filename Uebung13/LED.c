@@ -4,8 +4,8 @@
 void setAllLedAsOutput(struct BCM2837 *gpio){
 	setRedLedAsOutput(gpio);
 	setBlueLedAsOutput(gpio);
-	setGreenLedAsOutput(gpio);
 	setYellowLedAsOutput(gpio);
+	setGreenLedAsOutput(gpio);
 }
 
 void setRedLedAsOutput(struct BCM2837 *gpio) {
