@@ -35,7 +35,7 @@ int setPinLevel(struct BCM2837 *gpio, int pin, int state){
 int readPin(struct BCM2837 *gpio, int pin){
 	unsigned int bitmask = 1U << (pin % 32);
 	unsigned int registeroffset = (pin / 32);
-	unsigned int state = (*(gpio->virtualAdd + 13 + registeroffset) || bitmask);
+	unsigned int state = (*(gpio->virtualAdd + 13 + registeroffset) & bitmask);
 	if (state == 0){
 		state = LOW;
 	}

@@ -1,5 +1,5 @@
-PROGRAM = led
-OBJECTS = main.o HTW-Uebung-14.o GPIO.o mapping.o
+PROGRAM = teil1
+OBJECTS = main.o HTW-Uebung-14.o Random.o GPIO.o mapping.o
 #--------- ab hier nicht mehr ändern
 DEPENDFILE = .depend
 CC=gcc
