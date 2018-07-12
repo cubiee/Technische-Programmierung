@@ -39,7 +39,4 @@ void blinkAllLED(struct BCM2837 *gpio, int ontime, int offtime);
 
 /*Uebung 13*/
 void lauflicht(struct BCM2837 *gpio, int ontime, int offtime, int direction);
-
-/*Uebung 14*/
-
 #endif
